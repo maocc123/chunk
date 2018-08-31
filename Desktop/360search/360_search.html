@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>360_search</title>
+    <link href="https://cdn.bootcss.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet">
+    <style type="text/css">
+        *{
+            padding: 0;
+            margin: 
+        }
+        .list-group {
+            display: none;
+        }
+        .list-group li:hover{
+            display: block;
+            background-color: rgb(184,184,184);
+            cursor: pointer;
+        }
+        .list-group a {
+            text-decoration: none;
+            display: block;
+            color: green;
+        }
+    </style>
+</head>
+<body>
+    <div style="padding: 20px 100px 10px;">
+        <form class="" role="form">
+            <div class="row">
+                <div class="col-md-6">
+                    <h1 class='text-center' style="color:green">360 search</h1>
+                    <div class="input-group">
+                        <input id='input' type="text" class="form-control">
+                        <span class="input-group-btn">
+                            <button onclick='search()' id='btn' class="btn btn-success" type="button">
+                                搜索
+                            </button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <ul class="list-group col-md-5">
+        </ul>
+    </div>
+    <script type="text/javascript" src='./jsonp.js'></script>
+    <script type="text/javascript">
+        function search(){
+            var oIn = document.getElementById('input');
+            if(oIn.value){
+               window.location.href=`https://www.so.com/s?ie=utf-8&fr=none&src=360sou_newhome&q=${oIn.value}`;  
+           }
+        }
+        window.onload=function(){
+            var oIn = document.getElementById('input');
+            var oUl = document.getElementsByClassName('list-group')[0];
+            // oIn.onkeydown =function (e) {
+            //     if(e.keyCode==13) {
+            //         search();
+            //     } 
+            // }
+
+            oIn.onkeyup = function() {
+                if (this.value) {
+                jsonp('https://sug.so.360.cn/suggest', {encodein:'utf-8', encodeout:'utf-8',word:this.value}, 'mcc');
+                } else {
+                    oUl.style.display='none';
+                }
+            }
+        }
+        function mcc(data){
+            var oUl = document.getElementsByClassName('list-group')[0];
+            console.log(data)
+            var ht='';
+            if(data.s.length){
+                oUl.style.display='block'
+                for(var i=0; i<data.s.length; i++){
+                 ht+=`<li class='list-group-item'><a href='https://www.so.com/s?ie=utf-8&fr=none&src=360sou_newhome&q=${data.s[i]}'>${data.s[i]}</a></li>` 
+             }
+             oUl.innerHTML=ht; 
+            }else {
+                oUl.style.display='none';
+            }
+         }
+    </script>
+
+</body>
+</html>
